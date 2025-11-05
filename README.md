@@ -8,15 +8,15 @@ This repository contains the source code for all analyses and figures associated
 
 ## 🔗 Quick Links
 
--   [Shiny App: Relationship between intron architecture and chromatin features](https://github.com/AlicePierce/IntronArchitecture/scatterplots_shiny)
--   [Shiny App: Distribution of chromatin features binned by intron features](https://github.com/AlicePierce/IntronArchitecture/metaplots_shiny)
--   [Instructions for downloading and running the Shiny Apps](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#-running-the-shiny-app)
--   [Functions](https://github.com/AlicePierce/IntronArchitecture/functions_and_intermediates)
--   [Figure Scripts](https://github.com/AlicePierce/IntronArchitecture/figures)
+-   [Shiny App: Relationship between intron architecture and chromatin features](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#scatter-plots-shiny-app)
+-   [Shiny App: Distribution of chromatin features binned by intron features](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#metaplots-shiny-app)
+-   [Instructions for downloading and running the Shiny Apps](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#-running-the-shiny-apps)
+-   [Functions](https://github.com/AlicePierce/IntronArchitecture/tree/main/functions_and_intermediates)
+-   [Figure Scripts](https://github.com/AlicePierce/IntronArchitecture/tree/main/figures)
 
 ## ⚙️ Installation
 
-NOTE: Installing/Cloning this entire repository is not required to run the Shiny apps. To only run the apps, follow the provided [instructions for downloading and launching them](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#-running-the-shiny-app).
+NOTE: Installing/Cloning this entire repository is not required to run the Shiny apps. To only run the apps, follow the provided [instructions for downloading and launching them](https://github.com/AlicePierce/IntronArchitecture?tab=readme-ov-file#-running-the-shiny-apps).
 
 To run the code maintained in this repository:
 
@@ -100,7 +100,7 @@ Upload the data to the corresponding Shiny App folder and Run the App
 
 To explore the relationship between gene features and chromatin features interactively:
 
-1.  Download the [shiny app folder](https://github.com/AlicePierce/IntronArchitecture/scatterplots_shiny)
+1.  Download the [shiny app folder](https://github.com/AlicePierce/IntronArchitecture/tree/main/scatterplots_shiny)
 2.  Download [ScatterData.rds](https://zenodo.org/records/17536897) and place it in the `scatterplots_shiny` folder
 3.  Run the app locally using the following code:
 
@@ -113,7 +113,7 @@ shiny::runApp("scatterplots_shiny")
 
 To explore the distribution of chromatin features binned by gene architecture interactively:
 
-1.  Download the [shiny app folder](https://github.com/AlicePierce/IntronArchitecture/metaplots_shiny)
+1.  Download the [shiny app folder](https://github.com/AlicePierce/IntronArchitecture/tree/main/metaplots_shiny)
 2.  Download [metaplotsData.rds](https://zenodo.org/records/17536897) and place it in the `metaplots_shiny` folder
 3.  Run the app locally using the following code:
 
