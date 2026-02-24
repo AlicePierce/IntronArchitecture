@@ -9,13 +9,26 @@ source("../functions_and_intermediates/functions.R")
 
 # Intron-Exon Plots -------------------------------------------------------
 
+ArabidopsisIntronFeatures<-fread("../Output-files/ArabidopsisGeneFeatures.csv")
 IntronExonScores<-fread("../Output-files/Arabidopsis-PCSD-IntronExonDepth.csv")
 genes<-gffGenes("../Genomes/TAIR10_GFF3_genes.gff")
 genes<-isRepresentative(genes, "../Input-files/TAIR10_representative_gene_models.txt")
 IntronExonScores<-IntronExonScores[gene %in% genes$gene]
 
+setDT(IntronExonScores)
+setDT(ArabidopsisFeatures)
+
+IntronExonScores[
+  ArabidopsisFeatures,
+  totalintronNum := i.totalintronNum,
+  on = "gene"
+]
+
 IntronExonScores$NumGrp<-cut2(IntronExonScores$Num, g=10)
-Summary<-summarizeMarksbyGroup(IntronExonScores, grep("NormalizedSum",colnames(IntronExonScores),value=TRUE), "NumGrp")
+IntronExonScores$totalIntronNumGp<-cut2(IntronExonScores$totalintronNum, g=5)
+Summary<-summarizeMarksbyGroup2(IntronExonScores,
+                                grep("NormalizedSum",colnames(IntronExonScores),
+                                     value=TRUE), "NumGrp", "totalIntronNumGp")
 Summary[,featureNum := paste(Feature, as.character(NumGrp), sep=" ")]
 Summary$Mark<-gsub("NormalizedSum_", "", Summary$Mark)
 
@@ -23,10 +36,10 @@ Summary<-Summary[Mark %in% grep("H3K36me3|^H3K4", Summary$Mark,value=TRUE)]
 
 Levels<-Summary[Mark==Mark[1]]$featureNum
 
-Summary$featureNum<-factor(Summary$featureNum, levels = Levels)
+Summary$featureNum<-factor(Summary$featureNum, levels = unique(Levels))
 
 split_data <- split(Summary, Summary$Mark)
-IEPlots<-plotSplitData(split_data)
+IEPlots<-plotSplitDataV3(split_data)
 IEPlots <- lapply(seq_along(IEPlots), function(i) {
   if (i <= length(IEPlots) - 1) {
     # Remove x-axis text and title for all but the last 4 plots
@@ -39,6 +52,16 @@ IEPlots <- lapply(seq_along(IEPlots), function(i) {
 })
 col1<-plot_grid(plotlist = IEPlots, ncol = 1, align = "v", rel_heights = c(1,1,1,1.3),
                 labels = "A", label_size = 8)
+
+IEPlots<-plotSplitDataLegend(split_data)
+legend <- get_legend(IEPlots[[1]] +
+                       theme(legend.key.height = unit(0.25, "cm"),
+                             legend.spacing.y  = unit(0.05, "cm")))
+
+
+pdf("../Figures/Fig2_LegendIntronExon.pdf", height = 1.5, width = 1)
+plot_grid(legend)
+dev.off()
 
 # TSS Metaplots -----------------------------------------------------------
 TSSregion<-fread("../Output-files/Arabidopsis-PCSD-TSSregion.csv")
@@ -110,25 +133,44 @@ dev.off()
 # SuppFigs ----------------------------------------------------------------
 
 #intron exon plots
+ArabidopsisFeatures<-fread("../Output-files/ArabidopsisGeneFeatures.csv")
 IntronExonScores<-fread("../Output-files/Arabidopsis-PCSD-IntronExonDepth.csv")
 genes<-gffGenes("../Genomes/TAIR10_GFF3_genes.gff")
 genes<-isRepresentative(genes, "../Input-files/TAIR10_representative_gene_models.txt")
 IntronExonScores<-IntronExonScores[gene %in% genes$gene]
 
+setDT(IntronExonScores)
+setDT(ArabidopsisFeatures)
+
+IntronExonScores[
+  ArabidopsisFeatures,
+  totalintronNum := i.totalintronNum,
+  on = "gene"
+]
+
 IntronExonScores$NumGrp<-cut2(IntronExonScores$Num, g=10)
-Summary<-summarizeMarksbyGroup(IntronExonScores, grep("NormalizedSum",colnames(IntronExonScores),value=TRUE), "NumGrp")
+IntronExonScores$totalIntronNumGp<-cut2(IntronExonScores$totalintronNum, g=5)
+Summary<-summarizeMarksbyGroup2(IntronExonScores,
+                                grep("NormalizedSum",colnames(IntronExonScores),
+                                     value=TRUE), "NumGrp", "totalIntronNumGp")
+
 Summary[,featureNum := paste(Feature, as.character(NumGrp), sep=" ")]
 
 Levels<-Summary[Mark==Mark[1]]$featureNum
 
-Summary$featureNum<-factor(Summary$featureNum, levels = Levels)
+Summary$featureNum<-factor(Summary$featureNum, levels = unique(Levels))
 Summary$Mark<-gsub("NormalizedSum_", "", Summary$Mark)
 
 split_data <- split(Summary, Summary$Mark)
 
-AllIEPlots<-plotSplitData(split_data)
+AllIEPlots<-plotSplitDataV3(split_data)
 
-col1<-plot_grid(plotlist = AllIEPlots, ncol = 4)
+IEPlots<-plotSplitDataLegend(split_data)
+legend <- get_legend(IEPlots[[1]] +
+                       theme(legend.key.height = unit(0.25, "cm"),
+                             legend.spacing.y  = unit(0.05, "cm")))
+
+col1<-plot_grid(plotlist = c(AllIEPlots,list(legend)), ncol = 4)
 
 pdf("../Figures/Supp2_IntronExonScatter.pdf", height = 10, width = 8)
 col1

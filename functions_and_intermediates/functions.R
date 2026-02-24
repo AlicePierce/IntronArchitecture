@@ -477,7 +477,79 @@ plotSplitDataV2 <- function(split_data) {
 
   return(plotlist)  # Return the list of plots
 }
+plotSplitDataV3 <- function(split_data) {
+  plotlist <- list()  # Initialize an empty list
 
+  for (mark in names(split_data)) {
+    data <- split_data[[mark]]  # Extract data for the current mark
+
+    # Create the plot
+    plot <- ggplot(data, aes(x = featureNum, y = Mean, fill = Feature,
+                             group=totalIntronNumGp,
+                             color = totalIntronNumGp,
+                             shape = Feature),) +
+      geom_line(alpha = 0.6, linewidth = 1) +
+      geom_point(col="white", size = 1.5, stroke = 0.4) +
+      theme_classic(base_size = 6) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank()
+      ) +
+      geom_linerange(
+        aes(ymin = Mean - SE, ymax = Mean + SE),
+        color = "black",
+        alpha = 0.6
+      ) +
+      scale_shape_manual(values = c(21, 24)) +
+      scale_fill_manual(values = c("grey45", "grey45")) +
+      scale_color_manual(values=c("#f4915a", "#4e9db3", "#3a7d44", "#b07cad", "#c0392b"))+
+      labs(y = mark)
+
+    # Add the plot to the list using double brackets
+    plotlist[[mark]] <- plot
+  }
+
+  return(plotlist)  # Return the list of plots
+}
+plotSplitDataLegend <- function(split_data) {
+  plotlist <- list()  # Initialize an empty list
+
+  for (mark in names(split_data)) {
+    data <- split_data[[mark]]  # Extract data for the current mark
+
+    # Create the plot
+    plot <- ggplot(data, aes(x = featureNum, y = Mean, fill = Feature,
+                             group=totalIntronNumGp,
+                             color = totalIntronNumGp,
+                             shape = Feature),) +
+      geom_line(alpha = 0.6, linewidth = 1) +
+      geom_point(col="white", size = 1.5, stroke = 0.4) +
+      theme_classic(base_size = 6) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        #legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.ticks.x = element_blank()
+      ) +
+      geom_linerange(
+        aes(ymin = Mean - SE, ymax = Mean + SE),
+        color = "black",
+        alpha = 0.6
+      ) +
+      scale_shape_manual(values = c(21, 24)) +
+      scale_fill_manual(values = c("grey45", "grey45")) +
+      scale_color_manual(name="Number of Introns",
+                         values=c("#f4915a", "#4e9db3", "#3a7d44", "#b07cad", "#c0392b"))+
+      labs(y = mark)
+
+    # Add the plot to the list using double brackets
+    plotlist[[mark]] <- plot
+  }
+
+  return(plotlist)  # Return the list of plots
+}
 calculate_enrichment <- function(data, mark_cols, input_col) {
   # Hardcoded column names for start and stop
   start_col <- "start"
